@@ -5,7 +5,7 @@ metadata:
   name: tester
   description: asfdas
   annotations:
-    github.com/project-slug: github.com?owner=snoby-demo-org&repo=tester
+    github.com/project-slug: snoby-demo-org/tester
     backstage.io/techdocs-ref: dir:.
 spec:
   type: service
