@@ -1,0 +1,27 @@
+[Unit]
+Description=civicnet Node (tester)
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=30
+Restart=always
+RestartSec=10
+# Recreate the container on each start so image/config changes are picked up.
+ExecStartPre=-/usr/bin/docker stop tester
+ExecStartPre=-/usr/bin/docker rm tester
+ExecStart=/usr/bin/docker run \
+  --name tester \
+  -p 9332:9332 \
+  -p 9333:9333 \
+  -p 28332:28332 \
+  -p 28333:28333 \
+  -p 28334:28334 \
+  -p 28335:28335 \
+  -v tester-data:/root/.civicnet \
+  -v /root/.civicnet/civicnet.conf:/root/.civicnet/civicnet.conf:ro \
+  iotapi322/crypto-node:latest
+ExecStop=/usr/bin/docker stop tester
+
+[Install]
+WantedBy=multi-user.target

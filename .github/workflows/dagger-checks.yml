@@ -1,0 +1,41 @@
+name: Dagger Checks
+
+# Runs lint, PII scan, and the (stubbed) static-analysis / private-key /
+# format gates via the shared Dagger engine. The self-hosted runner image has
+# the dagger CLI baked in and _EXPERIMENTAL_DAGGER_RUNNER_HOST points at the
+# node-local always-on engine (see arc runner HelmRelease); cache is persistent
+# across runs.
+#
+# static-analyzer, private-key-check, and format are STUBS that currently pass;
+# wire real tools into snoby/dagger-checks to activate them.
+#
+# Requires backup to a dagger module. By default this check snapshots every
+# tracked file as a source; swap --source= for a module that lints your coin's
+# actual source tree once vendored.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: k8s-runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint (dagger)
+        run: dagger call --mod github.com/snoby-demo-org/dagger-checks lint --source=.
+
+      - name: PII scan (dagger)
+        run: dagger call --mod github.com/snoby-demo-org/dagger-checks pii-scan --source=.
+
+      - name: Static analyzer (dagger, stub)
+        run: dagger call --mod github.com/snoby-demo-org/dagger-checks static-analyzer --source=.
+
+      - name: Private key check (dagger, stub)
+        run: dagger call --mod github.com/snoby-demo-org/dagger-checks private-key-check --source=.
+
+      - name: Format check (dagger, stub)
+        run: dagger call --mod github.com/snoby-demo-org/dagger-checks format --source=.

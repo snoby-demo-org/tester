@@ -1,0 +1,9 @@
+# Don't ship vendored source git history or build artifacts into the image
+src/.git
+src/src/*.o
+src/src/*.a
+src/src/node
+src/src/cli
+src/depends/*
+*.md
+logs_llm/
